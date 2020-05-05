@@ -1,2 +1,4 @@
 # Houdini_Scripts
- A collection of personal Houdini scripts
+Houdini scripts from Lewis Orton
+Video demonstration https://vimeo.com/lewisorton
+Feel free to use and modify to your needs
