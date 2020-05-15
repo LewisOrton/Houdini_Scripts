@@ -4,6 +4,7 @@
 
 import hou, re, os, sys
 
+from urllib import unquote
 def dropAccept(files):
 
     pane = hou.ui.paneTabUnderCursor() 
@@ -11,12 +12,13 @@ def dropAccept(files):
         return False
 
     for file in files:
+        
         #windows file path contains special prefix which needs to be removed
         if file[0:8] == "file:///":
             file_path = file[8:]
         else:
             file_path = file
-        
+        file_path = unquote(file_path) #decode urlpath
         file_basename = os.path.splitext(os.path.basename(file_path))
         file_ext = file_basename[1].lower()
 
