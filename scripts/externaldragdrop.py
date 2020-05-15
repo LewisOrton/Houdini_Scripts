@@ -2,9 +2,11 @@
 # by Lewis Orton
 # https://vimeo.com/lewisorton
 
-import hou, re, os, sys
+import hou, re, os, sys, platform
 
 from urllib import unquote
+#decode urlpath on windows
+
 def dropAccept(files):
 
     pane = hou.ui.paneTabUnderCursor() 
@@ -13,11 +15,11 @@ def dropAccept(files):
 
     for file in files:
         
-        #windows file path contains special prefix which needs to be removed
-        if file[0:8] == "file:///":
+        if platform.system() == "Windows":
             file_path = file[8:]
-        else:
-            file_path = file
+        elif platform.system() == "Linux":
+            file_path = file[7:]
+            
         file_path = unquote(file_path) #decode urlpath
         file_basename = os.path.splitext(os.path.basename(file_path))
         file_ext = file_basename[1].lower()
@@ -49,6 +51,7 @@ def rel_path(fullpath):
 def import_file(network_node, file_path, file_basename, cursor_position):
     #validate node name
     file_name = re.sub(r"[^0-9a-zA-Z\.]+", "_", file_basename[0])
+    
     file_ext = file_basename[1].lower()
     
     #create new geo node in obj network if none exists
