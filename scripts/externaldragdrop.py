@@ -61,16 +61,16 @@ def import_file(network_node, file_path, file_basename, cursor_position):
 
     if network_node.type().name() == "geo":
         if file_ext == ".abc":
-            create_new_node(network_node, file_path, "alembic", "fileName", cursor_position, name=file_name)
+            create_new_node(network_node, file_path, "alembic", "fileName", cursor_position, name=file_name+"_")
             return True
         elif file_ext == ".rs":
-            create_new_node(network_node, file_path, "redshift_packedProxySOP", "RS_proxy_file", cursor_position, name=file_name)
+            create_new_node(network_node, file_path, "redshift_packedProxySOP", "RS_proxy_file", cursor_position, name=file_name+"_")
             return True
         elif file_ext == ".ass":
-            create_new_node(network_node, file_path, "arnold_asstoc", "ass_file", cursor_position, name=file_name)
+            create_new_node(network_node, file_path, "arnold_asstoc", "ass_file", cursor_position, name=file_name+"_")
             return True
         else:
-            create_new_node(network_node, file_path, "file", "file", cursor_position, name=file_name)
+            create_new_node(network_node, file_path, "file", "file", cursor_position, name=file_name+"_")
             return True
     elif network_node.type().name() in {"mat","materialbuilder", "materiallibrary"}:
         create_new_node(network_node, file_path, "texture::2.0", "map", cursor_position, name=file_name)
