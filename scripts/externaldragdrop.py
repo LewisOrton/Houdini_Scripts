@@ -61,36 +61,40 @@ def import_file(network_node, file_path, file_basename, cursor_position):
 
     if network_node.type().name() == "geo":
         if file_ext == ".abc":
-            create_new_node(network_node, file_path, "alembic", "fileName", cursor_position)
+            create_new_node(network_node, file_path, "alembic", "fileName", cursor_position, name=file_name)
             return True
         elif file_ext == ".rs":
-            create_new_node(network_node, file_path, "redshift_packedProxySOP", "RS_proxy_file", cursor_position)
+            create_new_node(network_node, file_path, "redshift_packedProxySOP", "RS_proxy_file", cursor_position, name=file_name)
             return True
         elif file_ext == ".ass":
-            create_new_node(network_node, file_path, "arnold_asstoc", "ass_file", cursor_position)
+            create_new_node(network_node, file_path, "arnold_asstoc", "ass_file", cursor_position, name=file_name)
             return True
         else:
-            create_new_node(network_node, file_path, "file", "file", cursor_position)
+            create_new_node(network_node, file_path, "file", "file", cursor_position, name=file_name)
             return True
     elif network_node.type().name() in {"mat","materialbuilder", "materiallibrary"}:
-        create_new_node(network_node, file_path, "texture::2.0", "map", cursor_position)
+        create_new_node(network_node, file_path, "texture::2.0", "map", cursor_position, name=file_name)
         return True
     elif network_node.type().name() == "redshift_vopnet":
-        create_new_node(network_node, file_path, "redshift::TextureSampler", "tex0", cursor_position)
+        create_new_node(network_node, file_path, "redshift::TextureSampler", "tex0", cursor_position, name=file_name)
         return True
     elif network_node.type().name() == "chopnet":
-        create_new_node(network_node, file_path, "file", "file", cursor_position)
+        create_new_node(network_node, file_path, "file", "file", cursor_position, name=file_name)
         return True
     elif network_node.type().name() in {"arnold_materialbuilder", "arnold_vopnet"}:
-        create_new_node(network_node, file_path, "arnold::image", "filename", cursor_position)
+        create_new_node(network_node, file_path, "arnold::image", "filename", cursor_position, name=file_name)
         return True
     elif network_node.type().name() in {"cop2net", "img"}:
-        create_new_node(network_node, file_path, "file", "filename1", cursor_position)
+        create_new_node(network_node, file_path, "file", "filename1", cursor_position, name=file_name)
         return True
     return False
 
-def create_new_node(network_node, file_path, node_name, parm_path_name, cursor_position):
-    new_node = network_node.createNode(node_name)
+def create_new_node(network_node, file_path, node_name, parm_path_name, cursor_position, **kwargs):
+    name =  kwargs.get('name', None)
+    if name:
+        new_node = network_node.createNode(node_name, name)
+    else:
+        new_node = network_node.createNode(node_name)
     new_node.setPosition(cursor_position)
     new_node.setParms({parm_path_name:file_path})
     return new_node
