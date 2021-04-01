@@ -23,6 +23,7 @@ def dropAccept(files):
                 file_path = file[7:]
         else:
             file_path = file
+            #print(file)
 
 
         file_path = unquote(file_path) #decode urlpath
@@ -75,6 +76,8 @@ def import_file(network_node, file_path, file_basename, file_ext, cursor_positio
         elif file_ext == ".ass":
             create_new_node(network_node, file_path, "arnold_asstoc", "ass_file", cursor_position, name = file_name)
             return True
+        elif file_ext in {".usd", ".usda", ".usdc"}:
+            create_new_node(network_node, file_path, "usdimport", "filepath1", cursor_position, name = file_name)
         else:
             create_new_node(network_node, file_path, "file", "file", cursor_position, name = file_name)
             return True
@@ -92,6 +95,9 @@ def import_file(network_node, file_path, file_basename, file_ext, cursor_positio
         return True
     elif network_node.type().name() in {"cop2net", "img"}:
         create_new_node(network_node, file_path, "file", "filename1", cursor_position, name = file_name)
+        return True
+    elif network_node.type().name() in {"lopnet","stage"}:
+        create_new_node(network_node, file_path, "reference", "filepath1", cursor_position, name = file_name)
         return True
     return False
 
