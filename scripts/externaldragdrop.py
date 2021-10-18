@@ -4,7 +4,10 @@
 
 import hou, re, os, sys, platform
 
-from urllib import unquote
+if sys.version_info.major < 3:
+    from urllib import unquote
+else:
+    from urllib.parse import unquote
 #decode urlpath on windows
 
 def dropAccept(files):
