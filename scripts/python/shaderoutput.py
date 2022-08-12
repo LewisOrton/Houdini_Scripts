@@ -24,6 +24,8 @@ def connect():
     renderer = node.type().name().split("::")[0]
     if renderer == "redshift":
         matcher = nodesearch.NodeType("redshift_material",typecat=None, exact=True)
+        if len(matcher.nodes(network)) == 0:
+            matcher = nodesearch.NodeType("redshift_usd_material",typecat=None, exact=True)
     elif renderer == "arnold":
         matcher = nodesearch.NodeType("arnold_material",typecat=None, exact=True)
     else:
