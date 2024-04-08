@@ -18,22 +18,33 @@ def connect():
     nodes = hou.selectedNodes()
     if len(nodes) == 0:
         return False
-        
     node = nodes[0]
     network = node.parent()
     renderer = node.type().name().split("::")[0]
+
     if renderer == "redshift":
         matcher = nodesearch.NodeType("redshift_material",typecat=None, exact=True)
         if len(matcher.nodes(network)) == 0:
             matcher = nodesearch.NodeType("redshift_usd_material",typecat=None, exact=True)
     elif renderer == "arnold":
         matcher = nodesearch.NodeType("arnold_material",typecat=None, exact=True)
+    elif renderer == "octane":
+        matcher = nodesearch.NodeType("octane_material",typecat=None, exact=True)
     else:
         matcher = nodesearch.NodeType("output",typecat=None, exact=True)
+
+    #Karma compatibility
+    if (node.type().name()[:4] == "mtlx" or node.type().name()[:4] == "kma"):
+        if node.outputDataTypes()[0] != "surface":
+            return
         
+        renderer = "karma"
+        matcher = nodesearch.NodeType("subnetconnector",typecat=None, exact=True)
 
     if len(matcher.nodes(network)) == 0:
         print("No output node found")
+        print(renderer)
+        print(matcher)
         return False
     elif len(matcher.nodes(network)) == 1:
         node_output = matcher.nodes(network)[0]
