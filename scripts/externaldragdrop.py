@@ -78,6 +78,14 @@ def import_file(network_node, file_path, file_basename, file_ext, cursor_positio
         while parent.type().name() == "subnet":
             parent = parent.parent()
         net_type_name = parent.type().name()
+    
+    #karma detection
+    if net_type_name == "materiallibrary":
+        test_nodes = network_node.children()
+        for test_node in test_nodes:
+            if test_node.type().name()[:4] == "mtlx" or "kma":
+                net_type_name = "karma_subnet"
+                break
 
     if net_type_name in {"geo","sopnet"}:
         if file_ext == ".abc":
@@ -111,6 +119,15 @@ def import_file(network_node, file_path, file_basename, file_ext, cursor_positio
         return True
     elif net_type_name in {"lopnet","stage"}:
         create_new_node(network_node, file_path, "reference", "filepath1", cursor_position, name = file_name)
+        return True
+    elif net_type_name == "karma_subnet":
+        create_new_node(network_node, file_path, "mtlximage", "file", cursor_position, name = file_name)
+        return True
+    elif net_type_name == "octane_vopnet":
+        octane_texture = create_new_node(network_node, file_path, "octane::NT_TEX_IMAGE", "A_FILENAME", cursor_position, name = file_name)
+        octane_transform = network_node.createNode("octane::NT_TRANSFORM_2D")
+        octane_transform.setPosition(cursor_position - hou.Vector2(2,0.8))
+        octane_texture.setInput(5, octane_transform, 0)
         return True
     return False
 
